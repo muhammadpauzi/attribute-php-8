@@ -1,0 +1,17 @@
+{
+    "name": "mhdpauzi/attribute-php-8",
+    "description": "Learn Attribute in PHP 8 by creating simple routes handling.",
+    "autoload": {
+        "psr-4": {
+            "Apps\\": "apps/",
+            "Core\\": "core/"
+        }
+    },
+    "authors": [
+        {
+            "name": "muhammadpauzi",
+            "email": "muhammadpauzi200@gmail.com"
+        }
+    ],
+    "require": {}
+}
