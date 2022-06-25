@@ -8,6 +8,8 @@ Learn Attribute on PHP 8 by creating simple http handling (mvc, api).
 
 ```sh
 git clone https://github.com/muhammadpauzi/attribute-php-8.git
+# and make sure to move inside the directory
+cd attribute-php-8
 ```
 
 - Run composer dump-autoload
