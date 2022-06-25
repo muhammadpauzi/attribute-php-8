@@ -7,6 +7,10 @@ use ReflectionObject;
 
 class HttpHandler
 {
+    public function __construct()
+    {
+        echo "HELLO WORLD";
+    }
     public function executeRoute(BaseController $controller)
     {
         $reflection = new ReflectionObject($controller);
