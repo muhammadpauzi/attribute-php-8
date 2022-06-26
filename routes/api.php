@@ -1,9 +1,13 @@
 <?php
 
 use Apps\Controllers\HomeController;
+use Apps\Controllers\PostController;
 use Core\Attributes\Handlers\HttpHandler;
+use Core\Routing\Router;
 
-$httpHandler = new HttpHandler();
+$apiRouter = new Router();
 
-// add controllers here
-$httpHandler->executeRoute(new HomeController());
+$apiRouter->registerControllers([
+    new HomeController,
+    new PostController
+]);

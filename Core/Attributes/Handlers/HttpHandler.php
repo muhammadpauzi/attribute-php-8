@@ -2,25 +2,62 @@
 
 namespace Core\Attributes\Handlers;
 
-use Core\Http\BaseController;
+use Core\Attributes\Controller;
+use Core\Attributes\Route;
+use ReflectionMethod;
 use ReflectionObject;
 
 class HttpHandler
 {
-    public function executeRoute(BaseController $controller)
+    private array $route = [];
+
+    public function __construct(private ReflectionObject $controllerObjectReflection)
     {
-        $reflection = new ReflectionObject($controller);
+        $this->route = [
+            "controller_class" => $this->controllerObjectReflection->getName(),
+            "controller_args" => $this->getControllerArguments($this->controllerObjectReflection),
+            "route_args" => $this->getRouteArguments($this->controllerObjectReflection),
+        ];
+    }
 
-        foreach ($reflection->getMethods() as $method) {
-            $attributes = $method->getAttributes(Route::class);
+    private function getControllerArguments(ReflectionObject $reflection)
+    {
+        $attributeArguments = [];
+        foreach ($reflection->getAttributes(Controller::class) as $attribute) {
+            $controllerArguments = $attribute->getArguments();
+            $attributeArguments = array_merge($controllerArguments);
+        }
+        return $attributeArguments;
+    }
 
-            if (count($attributes) > 0) {
-                $methodName = $method->getName();
-                // send parameter as request data
-                $controller->$methodName();
+    /**
+     * Untuk mengambil semua method yang menggunakan attribute Route dari sebuah Controller class/attribute
+     */
+    private function getRouteArguments(ReflectionObject $reflection)
+    {
+        $attributeArguments = [];
+        foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+            foreach ($method->getAttributes(Route::class) as $routeAttribute) {
+                $routeArguments["arguments"] = $routeAttribute->getArguments();
+                $routeArguments['route_method'] = $method;
+                $attributeArguments[] = array_merge($routeArguments);
             }
         }
+        return $attributeArguments;
+    }
 
-        // $actionHandler->execute();
+    public function getControllerClass()
+    {
+        return $this->route['controller_class'];
+    }
+
+    public function getBaseURL()
+    {
+        return $this->route["controller_args"]["base_url"];
+    }
+
+    public function getRouteArgs()
+    {
+        return $this->route['route_args'];
     }
 }

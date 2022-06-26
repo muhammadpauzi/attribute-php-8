@@ -4,12 +4,12 @@ namespace Apps\Controllers;
 
 use Core\Attributes\Controller;
 use Core\Attributes\Route;
-use Core\Http\BaseController;
+use Core\Http\Controllers\BaseController;
 
-#[Controller]
+#[Controller(base_url: '/home')]
 class HomeController extends BaseController
 {
-    #[Route('/home')]
+    #[Route(method: "GET", url: '/index')]
     public function index()
     {
         echo "Home Endpoint";
