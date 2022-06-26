@@ -4,6 +4,7 @@ namespace Core\Attributes\Handlers;
 
 use Core\Attributes\Controller;
 use Core\Attributes\Route;
+use Core\Routing\Route as RoutingRoute;
 use ReflectionMethod;
 use ReflectionObject;
 
@@ -59,5 +60,23 @@ class HttpHandler
     public function getRouteArgs()
     {
         return $this->route['route_args'];
+    }
+
+    public function getRoutes()
+    {
+        $routes = [];
+        foreach ($this->getRouteArgs() as $route) {
+            $routeURL = $route['arguments']['url'];
+            $requestMethod = $route['arguments']['method'];
+            $path = rtrim($this->getBaseURL() . $routeURL, '/');
+            $method = $route['route_method']->name; // method / function
+            $routes[] = new RoutingRoute(
+                $requestMethod,
+                $path,
+                $this->getControllerClass(),
+                $method
+            );
+        }
+        return $routes;
     }
 }

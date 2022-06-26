@@ -19,24 +19,17 @@ final class App
         $request = new Request();
         $controllers = $router->getControllerReflectionObjects();
 
+        $routes = [];
         foreach ($controllers as $controller) {
             $httpHandler = new HttpHandler($controller);
 
-            foreach ($httpHandler->getRouteArgs() as $route) {
-                $routeURL = $route['arguments']['url'];
-                $requestMethod = $route['arguments']['method'];
-                $path = rtrim($httpHandler->getBaseURL() . $routeURL, '/');
-                $controller = $httpHandler->getControllerClass();
-                // method / function
-                $method = $route['route_method']->name;
-
-                $this->routes[] = new Route($requestMethod, $path, $controller, $method);
+            foreach ($httpHandler->getRoutes() as $route) {
+                $this->routes[] = $route;
             }
         }
 
         foreach ($this->routes as $route) {
             $pattern = "#^" . $route->getPath() . "$#";
-
             if (
                 preg_match($pattern, $request->getPathRequest(), $variables)
                 &&
